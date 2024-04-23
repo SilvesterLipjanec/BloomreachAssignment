@@ -31,7 +31,7 @@ export class CustomerFilterComponent {
 
     test = "tests"
     eventDropdownPlaceholder = "Select an event";
-    filterPanelHeader = "Customer filter";
+    filterPanelHeaderText = "Customer filter";
     stepNameText = "Step";
     addEventAttributeText = "+ Add event attribute";
     refineMoreAttributeText = "Refine more";

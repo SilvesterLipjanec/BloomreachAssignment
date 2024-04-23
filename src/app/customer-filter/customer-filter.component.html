@@ -1,65 +1,78 @@
-<p-panel [header]="filterPanelHeader">
-    <button (click)="discardFilters()">discard filters</button>
-    <div class="card">
+<div class="panel">
+    <div class="panel__header">
+        <div class="panel__header-item">{{ filterPanelHeaderText | uppercase }}</div>
+        <div class="panel__header-item panel__header-item--right-align">
+            <button class="button button--no-background button--red-text" (click)="discardFilters()">Discard
+                filters</button>
+        </div>
+    </div>
+    <div class="customer-filter__card">
 
         <ng-container *ngFor="let filterStep of filterSteps; let stepIdx = index">
+            <div class="card-step">
+                <div class="card-step__header">
+                    <div class="card-step__header-item">
+                        <span>{{stepIdx + '. ' + stepNameText + ':'}}</span> <input type="text"
+                            [(ngModel)]="filterStep.name">
+                    </div>
+                    <div class="card-step__header-item card-step__header-item--right-align">
 
-            <div>
-                <span>{{stepIdx + '. ' + stepNameText + ':'}}</span> <input type="text" [(ngModel)]="filterStep.name">
-            </div>
-            <div>
-                <div *ngIf="stepIdx !== 0" (click)="removeFilterStep(stepIdx)">deleteStep</div>
-                <div (click)="duplicateFilterStep(stepIdx )">duplicateStep</div>
+                        <i class="fa-solid fa-trash" *ngIf="stepIdx !== 0" (click)="removeFilterStep(stepIdx)"></i>
+                        <i class="fa-regular fa-clone " (click)="duplicateFilterStep(stepIdx )"></i>
+                    </div>
+                </div>
 
-            </div>
+                <!-- Event selector -->
+                <p-dropdown [options]="events" [ngModel]="filterStep.event?.type"
+                    (ngModelChange)="changeFilterStepEvent($event, filterStep)" optionLabel="name" optionValue="id"
+                    [filter]="true" filterBy="name" [showClear]="true" [placeholder]="eventDropdownPlaceholder">
 
-            <!-- Event selector -->
-            <p-dropdown [options]="events" [ngModel]="filterStep.event?.type"
-                (ngModelChange)="changeFilterStepEvent($event, filterStep)" optionLabel="name" optionValue="id"
-                [filter]="true" filterBy="name" [showClear]="true" [placeholder]="eventDropdownPlaceholder">
+                </p-dropdown>
+                <ng-container *ngIf="filterStep.event">
+                    <ng-container *ngFor="let filterAttribute of filterStep.event.attributes; let attributeIdx=index">
+                        <!-- Attribute selector -->
+                        <p-dropdown [options]="propertiesByEventsLookup[filterStep.event.type]"
+                            [ngModel]="filterAttribute.property"
+                            (ngModelChange)="changeFilterEventAttribute($event, filterStep.event.type, filterAttribute)"
+                            optionValue="id" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                            [placeholder]="attributeDropdownPlaceholder">
 
-            </p-dropdown>
-            <ng-container *ngIf="filterStep.event">
-                <ng-container *ngFor="let filterAttribute of filterStep.event.attributes; let attributeIdx=index">
-                    <!-- Attribute selector -->
-                    <p-dropdown [options]="propertiesByEventsLookup[filterStep.event.type]"
-                        [ngModel]="filterAttribute.property"
-                        (ngModelChange)="changeFilterEventAttribute($event, filterStep.event.type, filterAttribute)"
-                        optionValue="id" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
-                        [placeholder]="attributeDropdownPlaceholder">
-
-                    </p-dropdown>
-                    <ng-container *ngIf="filterAttribute.property">
-                        <!-- Operator selector -->
-                        <p-dropdown
-                            [options]="filterTypeOperatorsLookup[eventPropertyTypesLookup[filterStep.event.type][filterAttribute.property]]"
-                            [ngModel]="filterAttribute.operator"
-                            (ngModelChange)="changeFilterAttributeOperator($event, filterAttribute)" optionValue="id"
-                            optionLabel="name" [filter]="true" filterBy="name" [showClear]="true">
                         </p-dropdown>
-                        <input type="text" [(ngModel)]="filterAttribute.value">
-                        <ng-container *ngIf="filterAttribute.value2!=null">
-                            <span>{{andText}}</span>
-                            <input type="text" [(ngModel)]="filterAttribute.value2">
-                        </ng-container>
+                        <ng-container *ngIf="filterAttribute.property">
+                            <!-- Operator selector -->
+                            <p-dropdown
+                                [options]="filterTypeOperatorsLookup[eventPropertyTypesLookup[filterStep.event.type][filterAttribute.property]]"
+                                [ngModel]="filterAttribute.operator"
+                                (ngModelChange)="changeFilterAttributeOperator($event, filterAttribute)"
+                                optionValue="id" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true">
+                            </p-dropdown>
+                            <input type="text" [(ngModel)]="filterAttribute.value">
+                            <ng-container *ngIf="filterAttribute.value2!=null">
+                                <span>{{andText}}</span>
+                                <input type="text" [(ngModel)]="filterAttribute.value2">
+                            </ng-container>
 
+                        </ng-container>
+                        <div (click)="removeFilterAttribute(filterStep.event.attributes, attributeIdx )">X</div>
                     </ng-container>
-                    <div (click)="removeFilterAttribute(filterStep.event.attributes, attributeIdx )">X</div>
+
+                    <button class="button button--no-background button--cyan-text "
+                        (click)="addEventAttribute(filterStep.event)">{{
+                        filterStep.event.attributes.length === 0 ?
+                        addEventAttributeText : refineMoreAttributeText }}</button>
+
                 </ng-container>
 
-                <button (click)="addEventAttribute(filterStep.event)">{{ filterStep.event.attributes.length === 0 ?
-                    addEventAttributeText : refineMoreAttributeText }}</button>
+                <p-divider></p-divider>
 
-            </ng-container>
-
-            <p-divider></p-divider>
-
-            <button (click)="addFilterStep()">{{addNextStepText }}</button>
-
+                <button class="button button--no-background button--cyan-text "
+                    (click)="addFilterStep()">{{addNextStepText
+                    }}</button>
+            </div>
         </ng-container>
 
 
     </div>
-    <button (click)="applyFilters()">Apply filters</button>
+    <button class="button button--success" (click)="applyFilters()">Apply filters</button>
 
-</p-panel>
+</div>

@@ -1,8 +1,78 @@
-.card {
-    background: var(--surface-card);
-    border: 1px solid lightgrey;
-    padding: 2rem;
+@import "../../styles.scss";
+
+.panel {
+    background: $grey-color-light;
+    padding: 1rem;
     border-radius: 3px;
     margin-bottom: 1rem;
 
+    &__header {
+        line-height: 2rem;
+    }
+
+    &__header-item {
+        display: inline-block;
+
+        &--right-align {
+            float: right;
+        }
+    }
+
+
+}
+
+.button {
+    cursor: pointer;
+    font-weight: bolder;
+    border: none;
+    height: 2rem;
+
+    &--no-background {
+        border: none;
+        background: transparent;
+    }
+
+    &--red-text {
+        color: $red-color;
+    }
+
+    &--cyan-text {
+        color: $cyan-color;
+    }
+
+    &--success {
+        background-color: $yellow-color;
+
+    }
+}
+
+
+
+
+
+.customer-filter__card {
+    background: white;
+    border: 1px solid $grey-color-middle;
+    padding: 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+
+}
+
+.card-step {
+    line-height: 2rem;
+
+    color: $grey-color-dark;
+
+    &__header {
+        line-height: 2rem;
+    }
+
+    &__header-item {
+        display: inline-block;
+
+        &--right-align {
+            float: right;
+        }
+    }
 }
