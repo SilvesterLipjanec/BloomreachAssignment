@@ -18,37 +18,39 @@ export interface CustomerEventProperty {
 
 export type CustomerFilter = CustomerFilterStep[];
 
-export interface CustomerFilterStep { 
+export interface CustomerFilterStep {
     name: string;
     event: CustomerFilterEvent | null;
 }
 
-export interface CustomerFilterEvent { 
+export interface CustomerFilterEvent {
     type: string;
-    attributes: CustomerFilterAttribute[] ;
+    attributes: CustomerFilterAttribute[];
 }
 
-export type CustomerFilterAttribute = { 
-    property: string;
-} & ( CustomerFilterStringProperty | CustomerFilterNumberProperty );
-
-export interface CustomerFilterStringProperty {
-    operator: CustomerFilterStringOperator;
-    value: string;
-}
-
-export interface CustomerFilterNumberProperty {
-    operator: CustomerFilterNumberOperator; 
-    value1: number;
+export type CustomerFilterAttribute = {
+    property: string | null;
+    operator: CustomerFilterStringOperator | CustomerFilterNumberOperator | null;
+    value: string | number | null;
     value2?: number;
 }
+// & (CustomerFilterStringProperty | CustomerFilterNumberProperty);
 
-type CustomerFilterStringOperator = "equals" | "does_not_equals" | "contains" | "does_not_contain";
-type CustomerFilterNumberOperator = "equal_to" | "in_between" | "less_than" | "greater_than";
+// export interface CustomerFilterStringProperty {
+//     operator: CustomerFilterStringOperator | null;
+// }
+
+// export interface CustomerFilterNumberProperty {
+//     value1: number;
+
+// }
+
+export type CustomerFilterStringOperator = "equals" | "does_not_equals" | "contains" | "does_not_contain";
+export type CustomerFilterNumberOperator = "equal_to" | "in_between" | "less_than" | "greater_than";
 
 // CustomerFilterOperator -----------------------------------------------------
 
-export interface CustomerFilterOperator  {
+export interface CustomerFilterOperator {
     type: "string" | "number";
     values: CustomerFilterOperatorValue[];
 }

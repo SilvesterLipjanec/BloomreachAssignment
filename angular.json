@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "BloomreachAssignment:build:production"
+              "buildTarget": "BloomreachAssignment:build:production"
             },
             "development": {
-              "browserTarget": "BloomreachAssignment:build:development"
+              "buildTarget": "BloomreachAssignment:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "BloomreachAssignment:build"
+            "buildTarget": "BloomreachAssignment:build"
           }
         },
         "test": {
@@ -93,6 +93,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss"
             ],
             "scripts": []
