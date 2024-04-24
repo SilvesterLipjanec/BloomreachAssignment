@@ -10,11 +10,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PanelModule } from 'primeng/panel';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
+import { InputValueTypePipe } from './pipes/input-value-type.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CustomerFilterComponent
+    CustomerFilterComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -24,9 +26,10 @@ import { CommonModule } from '@angular/common';
     BrowserAnimationsModule,
     PanelModule,
     DividerModule,
-    CommonModule
+    CommonModule,
+    InputValueTypePipe
   ],
-  providers: [],
+  providers: [InputValueTypePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

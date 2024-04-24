@@ -11,9 +11,10 @@ export interface CustomerEvent {
 
 export interface CustomerEventProperty {
     property: string;
-    type: "string" | "number";
+    type: SupportedPropertyTypes;
 }
 
+export type SupportedPropertyTypes = "string" | "number";
 // CustomerFilter ----------------------------------------------------------------
 
 export type CustomerFilter = CustomerFilterStep[];
@@ -30,6 +31,7 @@ export interface CustomerFilterEvent {
 
 export type CustomerFilterAttribute = {
     property: string | null;
+    propertyType: SupportedPropertyTypes;
     operator: CustomerFilterStringOperator | CustomerFilterNumberOperator | null;
     value: string | number | null;
     value2?: number;
@@ -51,7 +53,7 @@ export type CustomerFilterNumberOperator = "equal_to" | "in_between" | "less_tha
 // CustomerFilterOperator -----------------------------------------------------
 
 export interface CustomerFilterOperator {
-    type: "string" | "number";
+    type: SupportedPropertyTypes;
     values: CustomerFilterOperatorValue[];
 }
 

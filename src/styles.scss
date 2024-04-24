@@ -3,8 +3,81 @@
 @import "primeng/resources/themes/saga-blue/theme.css";
 
 $grey-color-light: #f7f6fd;
-$grey-color-middle: #ebebef;
-$grey-color-dark: #83828e;
+$grey-color-middle: #ced4da;
+$grey-color-dark: #555555;
 $yellow-color: #ffd000;
 $red-color: #e9768e;
-$cyan-color: #66cfe7
+$cyan-color: #66cfe7;
+
+.button {
+    cursor: pointer;
+    font-weight: bolder;
+    border: none;
+    height: 2rem;
+
+    &--no-background {
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    &--red-text {
+        color: $red-color;
+    }
+
+    &--cyan-text {
+        color: $cyan-color;
+    }
+
+    &--success {
+        background-color: $yellow-color;
+
+    }
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    margin: 4px;
+    cursor: pointer;
+}
+
+input {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid $grey-color-middle;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    border-radius: 3px;
+
+    &:hover {
+        border-color: #2196F3;
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: #2196F3;
+        box-shadow: 0px 0px 0px 3px rgba(0, 144, 237, .4);
+    }
+}
+
+.input {
+    &--no-border {
+        border: none;
+        background: none;
+    }
+
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

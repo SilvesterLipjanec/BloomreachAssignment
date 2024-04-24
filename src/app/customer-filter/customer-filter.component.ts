@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CUSTOMER_FILTER_OPERATORS, CustomerEvent, CustomerEventProperty, CustomerFilter, CustomerFilterAttribute, CustomerFilterEvent, CustomerFilterNumberOperator, CustomerFilterOperatorValue, CustomerFilterStep, CustomerFilterStringOperator } from './customer-filter-types';
+import { CUSTOMER_FILTER_OPERATORS, CustomerEvent, CustomerEventProperty, CustomerFilter, CustomerFilterAttribute, CustomerFilterEvent, CustomerFilterNumberOperator, CustomerFilterOperatorValue, CustomerFilterStep, CustomerFilterStringOperator, SupportedPropertyTypes } from './customer-filter-types';
 import { CustomerFilterGatewayService } from './customer-filter-gateway.service';
 interface DropwdownDefinition {
     id: string;
@@ -17,8 +17,8 @@ export class CustomerFilterComponent {
     events: DropwdownDefinition[] = [];
     propertiesByEventsLookup: Record<string, DropwdownDefinition[]> = {};
 
-    eventPropertyTypesLookup: Record<string, Record<string, string>> = {};
-    filterTypeOperatorsLookup: Record<string, CustomerFilterOperatorValue[]> = {};
+    eventPropertiesLookup: Record<string, Record<string, CustomerEventProperty>> = {};
+    filterTypeOperatorsLookup: Record<string, DropwdownDefinition[]> = {};
 
     private defaultStepName = "Unnamed step";
 
@@ -28,6 +28,7 @@ export class CustomerFilterComponent {
     }
 
     filterSteps: CustomerFilter = [{ ...this.defaultFilterStep }];
+    isFilterStepEditable = false;
 
     test = "tests"
     eventDropdownPlaceholder = "Select an event";
@@ -48,14 +49,14 @@ export class CustomerFilterComponent {
         this.customerFilterGateway.getCustomerEvents().subscribe((customerEvents: CustomerEvent[]) => {
             this.customerEvents = customerEvents
 
-            this.eventPropertyTypesLookup = Object.fromEntries(customerEvents.map((event) => [event.type,
-            Object.fromEntries(event.properties.map(prop => [prop.property, prop.type]))]));
+            this.eventPropertiesLookup = Object.fromEntries(customerEvents.map((event) => [event.type,
+            Object.fromEntries(event.properties.map(prop => [prop.property, prop]))]));
 
             this.propertiesByEventsLookup = Object.fromEntries(customerEvents.map((event) => [event.type, event.properties.map(prop => ({ id: prop.property, name: prop.property }))]));
             this.events = Object.keys(this.propertiesByEventsLookup).map(event => ({ id: event, name: event } as DropwdownDefinition));
         });
 
-        this.filterTypeOperatorsLookup = Object.fromEntries(CUSTOMER_FILTER_OPERATORS.map(operatorGroup => [operatorGroup.type, operatorGroup.values]))
+        this.filterTypeOperatorsLookup = Object.fromEntries(CUSTOMER_FILTER_OPERATORS.map(operatorGroup => [operatorGroup.type, operatorGroup.values as DropwdownDefinition[]]))
     }
 
     addFilterStep(): void {
@@ -79,18 +80,24 @@ export class CustomerFilterComponent {
 
     addEventAttribute(filterEvent: CustomerFilterEvent): void {
         filterEvent.attributes = filterEvent.attributes || [];
-        filterEvent.attributes.push({ property: null, operator: null, value: null })
+        filterEvent.attributes.push({ property: null, propertyType: "string", operator: null, value: null })
     }
 
     changeFilterEventAttribute(property: string, eventType: string, filterAttribute: CustomerFilterAttribute): void {
         filterAttribute.property = property;
-        if (this.eventPropertyTypesLookup[eventType][property] === "string") {
+        filterAttribute.propertyType = this.getEventPropertyType(eventType, property);
+        if (filterAttribute.propertyType === "string") {
             this.changeFilterAttributeOperator("equals", filterAttribute);
         } else {
             this.changeFilterAttributeOperator("equal_to", filterAttribute);
         }
-
     }
+
+    getEventPropertyType(eventType: string, property: string): SupportedPropertyTypes {
+        return this.eventPropertiesLookup[eventType][property].type;
+    }
+
+
 
     changeFilterAttributeOperator(operator: CustomerFilterNumberOperator | CustomerFilterStringOperator, filterAttribute: CustomerFilterAttribute): void {
         filterAttribute.operator = operator;
@@ -114,4 +121,5 @@ export class CustomerFilterComponent {
     duplicateFilterStep(stepIndex: number): void {
         this.filterSteps.splice(stepIndex, 0, { ...this.filterSteps[stepIndex] });
     }
+
 }

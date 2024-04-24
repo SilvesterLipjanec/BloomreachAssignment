@@ -21,35 +21,6 @@
 
 }
 
-.button {
-    cursor: pointer;
-    font-weight: bolder;
-    border: none;
-    height: 2rem;
-
-    &--no-background {
-        border: none;
-        background: transparent;
-    }
-
-    &--red-text {
-        color: $red-color;
-    }
-
-    &--cyan-text {
-        color: $cyan-color;
-    }
-
-    &--success {
-        background-color: $yellow-color;
-
-    }
-}
-
-
-
-
-
 .customer-filter__card {
     background: white;
     border: 1px solid $grey-color-middle;
@@ -60,12 +31,18 @@
 }
 
 .card-step {
-    line-height: 2rem;
-
     color: $grey-color-dark;
 
     &__header {
-        line-height: 2rem;
+        line-height: 3rem;
+    }
+
+    &__name {
+        margin-right: 0.3rem;
+    }
+
+    &__footer {
+        text-align: center;
     }
 
     &__header-item {
@@ -75,4 +52,82 @@
             float: right;
         }
     }
+
+    &__item-hover-only {
+        display: none;
+    }
+
+    &:hover .card-step__item-hover-only {
+        display: inherit;
+    }
+
+    &__body {
+        display: grid;
+        grid-template-columns: 200px 30px auto;
+
+        &-row {
+            margin: 0.3rem 0;
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+    }
+
+    &__event {
+        display: flex;
+        flex-grow: 1;
+        grid-column-start: 1;
+        justify-content: end;
+    }
+
+    &__attribute {
+        grid-column-start: 3;
+
+        &-item {
+            margin-right: 0.6rem;
+        }
+
+        &-hover-only {
+            display: none;
+        }
+
+        &:hover .card-step__attribute-hover-only {
+            display: inherit;
+        }
+    }
+
+    &__attribute-separator {
+        display: grid;
+        grid-template: auto auto / auto auto;
+
+        &--item-left {
+            grid-column-start: 1;
+            grid-row-start: 2;
+            border-top: 1px solid $grey-color-middle;
+        }
+
+        &--item-right {
+            grid-column-start: 2;
+            grid-row-start: 2;
+            border-top: 1px solid $grey-color-middle;
+        }
+
+        &--item-bottom {
+            grid-column-start: 2;
+            grid-row-start: 2;
+            border-left: 1px solid $grey-color-middle;
+        }
+
+        &--item-top {
+            grid-column-start: 2;
+            grid-row-start: 1;
+            border-left: 1px solid $grey-color-middle;
+        }
+    }
+
+}
+
+.p-dropdown {
+    background-color: $grey-color-light;
 }
