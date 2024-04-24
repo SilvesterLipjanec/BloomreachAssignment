@@ -6,8 +6,10 @@ $grey-color-light: #f7f6fd;
 $grey-color-middle: #ced4da;
 $grey-color-dark: #555555;
 $yellow-color: #ffd000;
-$red-color: #e9768e;
-$cyan-color: #66cfe7;
+$red-color: #d44b69;
+$cyan-color: #25c4e9;
+
+
 
 .button {
     cursor: pointer;
@@ -45,11 +47,11 @@ $cyan-color: #66cfe7;
 input {
     font-family: var(--font-family);
     font-size: 1rem;
+    font-weight: 500;
     padding: 0.5rem 0.5rem;
     border: 1px solid $grey-color-middle;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     appearance: none;
-    border-radius: 3px;
 
     &:hover {
         border-color: #2196F3;
@@ -80,4 +82,18 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+.p-dropdown {
+    border-radius: 0;
+    background-color: $grey-color-light;
+}
+
+.p-dropdown-label {
+
+    font-weight: bolder;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+    background-color: $yellow-color;
 }

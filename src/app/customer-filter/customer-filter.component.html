@@ -1,18 +1,17 @@
 <div class="panel">
     <div class="panel__header">
-        <div class="panel__header-item">{{ filterPanelHeaderText | uppercase }}</div>
+        <div class="panel__header-item">{{ 'Customer filter' | uppercase }}</div>
         <div class="panel__header-item panel__header-item--right-align">
             <button class="button button--no-background button--red-text" (click)="discardFilters()">Discard
                 filters</button>
         </div>
     </div>
     <div class="customer-filter__card">
-
         <ng-container *ngFor="let filterStep of filterSteps; let stepIdx = index">
             <div class="card-step">
                 <div class="card-step__header">
                     <div class="card-step__header-item">
-                        <span class="card-step__name">{{stepIdx + '. ' + stepNameText + ':'}}</span>
+                        <span class="card-step__name">{{stepIdx + 1 + '. Step:'}}</span>
                         <input [disabled]="!isFilterStepEditable" class="input--no-border" [(ngModel)]="filterStep.name"
                             [style.width.ch]="filterStep.name.length+2">
                         <i (click)="isFilterStepEditable=!isFilterStepEditable" class="icon fa-solid fa-pencil"></i>
@@ -29,14 +28,15 @@
                         <p-dropdown [options]="events" [ngModel]="filterStep.event?.type" class="card-step__event"
                             [style]="{'flex-grow': 1}" (ngModelChange)="changeFilterStepEvent($event, filterStep)"
                             optionLabel="name" optionValue="id" [filter]="true" filterBy="name"
-                            [placeholder]="eventDropdownPlaceholder">
+                            placeholder="Select an event">
                         </p-dropdown>
 
                     </div>
                     <ng-container *ngIf="filterStep.event">
                         <ng-container
                             *ngFor="let filterAttribute of filterStep.event.attributes; let attributeIdx=index">
-                            <div *ngIf="attributeIdx != 0" class="card-step__body-row card-step__event">AND</div>
+                            <div *ngIf="attributeIdx != 0" class="card-step__body-row card-step__event">AND
+                            </div>
                             <div class="card-step__attribute-separator">
                                 <div *ngIf="attributeIdx === 0" class="card-step__attribute-separator--item-left">
                                 </div>
@@ -54,7 +54,7 @@
                                     [ngModel]="filterAttribute.property"
                                     (ngModelChange)="changeFilterEventAttribute($event, filterStep.event.type, filterAttribute)"
                                     optionValue="id" optionLabel="name" [filter]="true" filterBy="name"
-                                    [placeholder]="attributeDropdownPlaceholder" class="card-step__attribute-item">
+                                    placeholder="Select an attribute" class="card-step__attribute-item">
 
                                 </p-dropdown>
                                 <ng-container *ngIf="filterAttribute.property">
@@ -69,7 +69,7 @@
                                         [type]="filterAttribute.propertyType | inputValueType"
                                         [(ngModel)]="filterAttribute.value">
                                     <ng-container *ngIf="filterAttribute.value2!=null">
-                                        <div class="card-step__attribute-item">{{andText}}</div>
+                                        <div class="card-step__attribute-item">AND</div>
                                         <input class="card-step__attribute-item"
                                             [type]="filterAttribute.propertyType | inputValueType"
                                             [(ngModel)]="filterAttribute.value2">
@@ -84,7 +84,7 @@
                             <button class="button button--no-background button--cyan-text "
                                 (click)="addEventAttribute(filterStep.event)">{{
                                 filterStep.event.attributes.length === 0 ?
-                                addEventAttributeText : refineMoreAttributeText }}</button>
+                                '+ Add event attribute' : 'Refine more' }}</button>
                         </div>
                     </ng-container>
                 </div>
@@ -92,9 +92,8 @@
                 <p-divider></p-divider>
 
                 <div *ngIf="stepIdx === filterSteps.length - 1 " class="card-step__footer">
-                    <button class="button button--no-background button--cyan-text "
-                        (click)="addFilterStep()">{{addNextStepText
-                        }}</button>
+                    <button class="button button--no-background button--cyan-text " (click)="addFilterStep()">+ ADD
+                        FUNNEL STEP</button>
                 </div>
             </div>
         </ng-container>

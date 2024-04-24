@@ -1,5 +1,8 @@
 @import "../../styles.scss";
 
+
+
+
 .panel {
     background: $grey-color-light;
     padding: 1rem;
@@ -7,7 +10,8 @@
     margin-bottom: 1rem;
 
     &__header {
-        line-height: 2rem;
+        font-weight: 500;
+        line-height: 3rem;
     }
 
     &__header-item {
@@ -32,6 +36,7 @@
 
 .card-step {
     color: $grey-color-dark;
+    font-weight: 500;
 
     &__header {
         line-height: 3rem;
@@ -65,7 +70,9 @@
         display: grid;
         grid-template-columns: 200px 30px auto;
 
+
         &-row {
+            color: $grey-color-middle;
             margin: 0.3rem 0;
             display: flex;
             width: 100%;
@@ -125,9 +132,4 @@
             border-left: 1px solid $grey-color-middle;
         }
     }
-
-}
-
-.p-dropdown {
-    background-color: $grey-color-light;
 }

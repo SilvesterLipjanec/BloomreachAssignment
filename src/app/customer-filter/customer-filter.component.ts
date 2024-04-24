@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CUSTOMER_FILTER_OPERATORS, CustomerEvent, CustomerEventProperty, CustomerFilter, CustomerFilterAttribute, CustomerFilterEvent, CustomerFilterNumberOperator, CustomerFilterOperatorValue, CustomerFilterStep, CustomerFilterStringOperator, SupportedPropertyTypes } from './customer-filter-types';
 import { CustomerFilterGatewayService } from './customer-filter-gateway.service';
+
 interface DropwdownDefinition {
     id: string;
     name: string;
@@ -9,40 +10,27 @@ interface DropwdownDefinition {
 @Component({
     selector: 'app-customer-filter',
     templateUrl: './customer-filter.component.html',
-    styleUrls: ['./customer-filter.component.scss']
+    styleUrls: ['./customer-filter.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CustomerFilterComponent {
+
+    private defaultFilterStep: CustomerFilterStep = {
+        name: "Unnamed step",
+        event: null
+    }
+
+    private customerFilterGateway = inject(CustomerFilterGatewayService)
 
     customerEvents?: CustomerEvent[];
     events: DropwdownDefinition[] = [];
     propertiesByEventsLookup: Record<string, DropwdownDefinition[]> = {};
-
-    eventPropertiesLookup: Record<string, Record<string, CustomerEventProperty>> = {};
     filterTypeOperatorsLookup: Record<string, DropwdownDefinition[]> = {};
+    eventPropertiesLookup: Record<string, Record<string, CustomerEventProperty>> = {};
 
-    private defaultStepName = "Unnamed step";
-
-    private defaultFilterStep: CustomerFilterStep = {
-        name: this.defaultStepName,
-        event: null
-    }
-
-    filterSteps: CustomerFilter = [{ ...this.defaultFilterStep }];
     isFilterStepEditable = false;
 
-    test = "tests"
-    eventDropdownPlaceholder = "Select an event";
-    filterPanelHeaderText = "Customer filter";
-    stepNameText = "Step";
-    addEventAttributeText = "+ Add event attribute";
-    refineMoreAttributeText = "Refine more";
-    attributeDropdownPlaceholder = "Select an attribute";
-    andText = "AND";
-    addNextStepText = "+ ADD FUNNEL STEP";
-
-    private customerFilterGateway = inject(CustomerFilterGatewayService)
-
-
+    filterSteps: CustomerFilter = [{ ...this.defaultFilterStep }];
 
     ngOnInit(): void {
 
@@ -96,8 +84,6 @@ export class CustomerFilterComponent {
     getEventPropertyType(eventType: string, property: string): SupportedPropertyTypes {
         return this.eventPropertiesLookup[eventType][property].type;
     }
-
-
 
     changeFilterAttributeOperator(operator: CustomerFilterNumberOperator | CustomerFilterStringOperator, filterAttribute: CustomerFilterAttribute): void {
         filterAttribute.operator = operator;
