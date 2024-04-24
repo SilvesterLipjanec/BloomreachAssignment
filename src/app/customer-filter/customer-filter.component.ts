@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, inject, Output, output, ViewEncapsulation } from '@angular/core';
 import { CUSTOMER_FILTER_OPERATORS, CustomerEvent, CustomerEventProperty, CustomerFilter, CustomerFilterAttribute, CustomerFilterEvent, CustomerFilterNumberOperator, CustomerFilterOperatorValue, CustomerFilterStep, CustomerFilterStringOperator, SupportedPropertyTypes } from './customer-filter-types';
 import { CustomerFilterGatewayService } from './customer-filter-gateway.service';
 
@@ -14,6 +14,8 @@ interface DropwdownDefinition {
     encapsulation: ViewEncapsulation.None
 })
 export class CustomerFilterComponent {
+
+    @Output("filterChange") filterChange = new EventEmitter<CustomerFilter>()
 
     private defaultFilterStep: CustomerFilterStep = {
         name: "Unnamed step",
@@ -48,11 +50,13 @@ export class CustomerFilterComponent {
     }
 
     addFilterStep(): void {
-        this.filterSteps.push({ ...this.defaultFilterStep })
+        this.filterSteps.push({ ...this.defaultFilterStep });
+        this.onFilterChange();
     }
 
     discardFilters(): void {
         this.filterSteps = [{ ...this.defaultFilterStep }]
+        this.onFilterChange();
     }
 
     applyFilters(): void {
@@ -64,11 +68,13 @@ export class CustomerFilterComponent {
             type: type,
             attributes: []
         }
+        this.onFilterChange();
     }
 
     addEventAttribute(filterEvent: CustomerFilterEvent): void {
         filterEvent.attributes = filterEvent.attributes || [];
         filterEvent.attributes.push({ property: null, propertyType: "string", operator: null, value: null })
+        this.onFilterChange();
     }
 
     changeFilterEventAttribute(property: string, eventType: string, filterAttribute: CustomerFilterAttribute): void {
@@ -79,6 +85,7 @@ export class CustomerFilterComponent {
         } else {
             this.changeFilterAttributeOperator("equal_to", filterAttribute);
         }
+        this.onFilterChange();
     }
 
     getEventPropertyType(eventType: string, property: string): SupportedPropertyTypes {
@@ -94,18 +101,27 @@ export class CustomerFilterComponent {
             filterAttribute.value = null;
             delete filterAttribute.value2;
         }
+        this.onFilterChange();
     }
+
 
     removeFilterAttribute(filterAttributes: CustomerFilterAttribute[], attributeIndex: number): void {
         filterAttributes.splice(attributeIndex, 1);
+        this.onFilterChange();
     }
 
     removeFilterStep(stepIndex: number): void {
         this.filterSteps.splice(stepIndex, 1);
+        this.onFilterChange();
     }
 
     duplicateFilterStep(stepIndex: number): void {
         this.filterSteps.splice(stepIndex, 0, { ...this.filterSteps[stepIndex] });
+        this.onFilterChange();
+    }
+
+    onFilterChange(): void {
+        this.filterChange.emit(this.filterSteps);
     }
 
 }
