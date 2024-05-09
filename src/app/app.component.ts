@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, viewChild } from '@angular/core';
+import { CustomerFilterComponent } from './customer-filter/customer-filter.component';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'BloomreachAssignment';
+  title = 'InterviewAssignment';
+
+  @ViewChild(CustomerFilterComponent) appCustomerFilter?: CustomerFilterComponent;
+
+  discardFilters(): void {
+    this.appCustomerFilter?.discardFilters();
+  }
 }

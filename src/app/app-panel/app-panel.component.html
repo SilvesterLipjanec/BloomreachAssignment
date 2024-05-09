@@ -1,0 +1,9 @@
+<div class="panel">
+    <ng-container *ngIf="_panelHeader">
+        <div class="panel__header">
+            <ng-container [ngTemplateOutlet]="_panelHeader.headerTemplate">
+            </ng-container>
+        </div>
+    </ng-container>
+    <ng-content></ng-content>
+</div>

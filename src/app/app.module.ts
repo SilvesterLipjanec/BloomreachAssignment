@@ -11,14 +11,18 @@ import { PanelModule } from 'primeng/panel';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
 import { InputValueTypePipe } from './pipes/input-value-type.pipe';
+import { AppPanelComponent } from './app-panel/app-panel.component';
+import { AppPanelHeaderDirective } from './app-panel/app-panel-header.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     CustomerFilterComponent,
+    AppPanelComponent
 
   ],
   imports: [
+    AppPanelHeaderDirective,
     BrowserModule,
     HttpClientModule,
     DropdownModule,

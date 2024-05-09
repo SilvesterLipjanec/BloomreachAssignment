@@ -1,1 +1,10 @@
-<app-customer-filter></app-customer-filter>
+<app-panel>
+    <ng-container *appPanelHeader>
+        <div class="panel__header-item">{{ 'Customer filter' | uppercase }}</div>
+        <div class="panel__header-item panel__header-item--right-align">
+            <button class="button button--no-background button--red-text" (click)="discardFilters()">Discard
+                filters</button>
+        </div>
+    </ng-container>
+    <app-customer-filter></app-customer-filter>
+</app-panel>

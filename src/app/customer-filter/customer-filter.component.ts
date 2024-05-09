@@ -1,6 +1,7 @@
-import { Component, EventEmitter, inject, Output, output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, output, ViewEncapsulation } from '@angular/core';
 import { CUSTOMER_FILTER_OPERATORS, CustomerEvent, CustomerEventProperty, CustomerFilter, CustomerFilterAttribute, CustomerFilterEvent, CustomerFilterNumberOperator, CustomerFilterOperatorValue, CustomerFilterStep, CustomerFilterStringOperator, SupportedPropertyTypes } from './customer-filter-types';
 import { CustomerFilterGatewayService } from './customer-filter-gateway.service';
+import { Subject, takeUntil } from 'rxjs';
 
 interface DropwdownDefinition {
     id: string;
@@ -13,7 +14,7 @@ interface DropwdownDefinition {
     styleUrls: ['./customer-filter.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CustomerFilterComponent {
+export class CustomerFilterComponent implements OnInit, OnDestroy {
 
     @Output("filterChange") filterChange = new EventEmitter<CustomerFilter>()
 
@@ -24,6 +25,8 @@ export class CustomerFilterComponent {
 
     private customerFilterGateway = inject(CustomerFilterGatewayService)
 
+    private destroyed$ = new Subject<void>();
+
     customerEvents?: CustomerEvent[];
     events: DropwdownDefinition[] = [];
     propertiesByEventsLookup: Record<string, DropwdownDefinition[]> = {};
@@ -32,30 +35,33 @@ export class CustomerFilterComponent {
 
     isFilterStepEditable = false;
 
-    filterSteps: CustomerFilter = [{ ...this.defaultFilterStep }];
+    filterSteps: CustomerFilter = [structuredClone(this.defaultFilterStep)];
+
 
     ngOnInit(): void {
 
-        this.customerFilterGateway.getCustomerEvents().subscribe((customerEvents: CustomerEvent[]) => {
-            this.customerEvents = customerEvents
+        this.customerFilterGateway.getCustomerEvents()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe((customerEvents: CustomerEvent[]) => {
+                this.customerEvents = customerEvents
 
-            this.eventPropertiesLookup = Object.fromEntries(customerEvents.map((event) => [event.type,
-            Object.fromEntries(event.properties.map(prop => [prop.property, prop]))]));
+                this.eventPropertiesLookup = Object.fromEntries(customerEvents.map((event) => [event.type,
+                Object.fromEntries(event.properties.map(prop => [prop.property, prop]))]));
 
-            this.propertiesByEventsLookup = Object.fromEntries(customerEvents.map((event) => [event.type, event.properties.map(prop => ({ id: prop.property, name: prop.property }))]));
-            this.events = Object.keys(this.propertiesByEventsLookup).map(event => ({ id: event, name: event } as DropwdownDefinition));
-        });
+                this.propertiesByEventsLookup = Object.fromEntries(customerEvents.map((event) => [event.type, event.properties.map(prop => ({ id: prop.property, name: prop.property }))]));
+                this.events = Object.keys(this.propertiesByEventsLookup).map(event => ({ id: event, name: event } as DropwdownDefinition));
+            });
 
         this.filterTypeOperatorsLookup = Object.fromEntries(CUSTOMER_FILTER_OPERATORS.map(operatorGroup => [operatorGroup.type, operatorGroup.values as DropwdownDefinition[]]))
     }
 
     addFilterStep(): void {
-        this.filterSteps.push({ ...this.defaultFilterStep });
+        this.filterSteps.push(structuredClone(this.defaultFilterStep));
         this.onFilterChange();
     }
 
     discardFilters(): void {
-        this.filterSteps = [{ ...this.defaultFilterStep }]
+        this.filterSteps = [structuredClone(this.defaultFilterStep)]
         this.onFilterChange();
     }
 
@@ -116,12 +122,17 @@ export class CustomerFilterComponent {
     }
 
     duplicateFilterStep(stepIndex: number): void {
-        this.filterSteps.splice(stepIndex, 0, { ...this.filterSteps[stepIndex] });
+        this.filterSteps.splice(stepIndex, 0, structuredClone(this.filterSteps[stepIndex]));
         this.onFilterChange();
     }
 
     onFilterChange(): void {
         this.filterChange.emit(this.filterSteps);
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
 }
